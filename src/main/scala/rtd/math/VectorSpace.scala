@@ -20,6 +20,19 @@ abstract class VectorSpace[T, U](field: Field[U]) {
 
   def additiveIdentity(): T
 
+  // 1v = v
+  def removeIdentity(e: MultiplicationExpression): Expression[T] = {
+    if (e.x != field.multiplicativeIdentity()) {
+      throw new Exception("cannot remove identity")
+    }
+    e.y
+  }
+
+  // v = 1v
+  def addIdentity(e: UnaryExpression[T]): MultiplicationExpression = {
+    new MultiplicationExpression(new UnaryExpression[U](field.multiplicativeIdentity()), e)
+  }
+
   // u + v = v + u
   def commute(e: AdditionExpression): AdditionExpression = new AdditionExpression(e.y, e.x)
 

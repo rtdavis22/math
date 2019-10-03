@@ -28,12 +28,16 @@ class CoordinateSpace[T, S <: IntType](field: Field[T])(implicit manifest: Manif
   }
 }
 
+class RealVectorSpace[S <: IntType](implicit manifest: Manifest[S]) extends CoordinateSpace[ElementOfR, S](new  ℝ()) {
+
+}
+
 object CoordinateSpace {
   def main(args: Array[String]): Unit = {
     class I10 extends IntType { val value = 10 }
 
-    val cs = new CoordinateSpace[ElementOfR, I10](new ℝ())
+    val vs = new RealVectorSpace[I10]()
 
-    println(cs)
+    println(vs)
   }
 }
