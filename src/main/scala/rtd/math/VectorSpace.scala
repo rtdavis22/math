@@ -19,7 +19,6 @@ abstract class VectorSpace[T, U](field: Field[U]) {
   def additivelyInvert(t: T): T
 
   def additiveIdentity(): T
-  def multiplicativeIdentity(): T
 
   // u + v = v + u
   def commute(e: AdditionExpression): AdditionExpression = new AdditionExpression(e.y, e.x)

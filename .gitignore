@@ -8,4 +8,6 @@ project/plugins/project/
 .cache
 .lib/
 
+.idea/
+
 go/vendor/
