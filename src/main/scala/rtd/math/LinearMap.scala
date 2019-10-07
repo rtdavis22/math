@@ -24,33 +24,25 @@ abstract class LinearMap[V, W, E](val v: VectorSpace[V, E], val w: VectorSpace[W
 class Hom[V, W, E](val v: VectorSpace[V, E], val w: VectorSpace[W, E], field: Field[E]) extends VectorSpace[LinearMap[V, W, E], E](field) {
   override def +(s: LinearMap[V, W, E], t: LinearMap[V, W, E]): LinearMap[V, W, E] = {
     new LinearMap[V, W, E](v, w) {
-      override def apply(e: V): W = {
-        w.+(s.apply(e), t.apply(e))
-      }
+      override def apply(e: V): W = w.+(s.apply(e), t.apply(e))
     }
   }
 
   override def *(c: E, s: LinearMap[V, W, E]): LinearMap[V, W, E] = {
     new LinearMap[V, W, E](v, w) {
-      override def apply(e: V): W = {
-        w.*(c, s.apply(e))
-      }
+      override def apply(e: V): W = w.*(c, s.apply(e))
     }
   }
 
   override def -(s: LinearMap[V, W, E]): LinearMap[V, W, E] = {
     new LinearMap[V, W, E](v, w) {
-      override def apply(e: V): W = {
-        w.-(s.apply(e))
-      }
+      override def apply(e: V): W = w.-(s.apply(e))
     }
   }
 
   override def zero(): LinearMap[V, W, E] = {
     new LinearMap[V, W, E](v, w) {
-      override def apply(e: V): W = {
-        w.zero()
-      }
+      override def apply(e: V): W = w.zero()
     }
   }
 }
@@ -58,8 +50,7 @@ class Hom[V, W, E](val v: VectorSpace[V, E], val w: VectorSpace[W, E], field: Fi
 // The endomorphisms of a linear map V
 class End[V, E](v: VectorSpace[V, E], field: Field[E]) extends Hom[V, V, E](v, v, field)
 
-
-abstract class EndomorphicMap[T, E](v: VectorSpace[T, E]) extends LinearMap[T, T, E](v, v) {}
+abstract class EndomorphicMap[T, E](v: VectorSpace[T, E]) extends LinearMap[T, T, E](v, v)
 
 class IdentityMap[T, E](v: VectorSpace[T, E]) extends EndomorphicMap[T,E](v) {
   override def apply(e: T): T = e
