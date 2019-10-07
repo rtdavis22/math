@@ -1,26 +1,33 @@
 package rtd.math
 
 trait Field[T] {
+  def +(e1: T, e2: T): T
+
+  def *(e1: T, e2: T): T
+
+  // x + (-x) = 0
+  def -(x: T): T
+
+  // x(1/x) = 1
+  def invert(x: T): T
+
+  // x + 0 = x
+  def zero(): T
+
+  // x1 = x
+  def one(): T
+
   class AdditionExpression(x: Expression[T], y: Expression[T]) extends BinaryExpression[T, T, T](x, y) {
-    override def evaluate(): T = {
-      Field.this.+(x.evaluate(), y.evaluate())
-    }
+    override def evaluate(): T = Field.this.+(x.evaluate(), y.evaluate())
   }
   class MultiplicationExpression(x: Expression[T], y: Expression[T]) extends BinaryExpression[T, T, T](x, y) {
-    override def evaluate(): T = {
-      Field.this.*(x.evaluate(), y.evaluate())
-    }
+    override def evaluate(): T = Field.this.*(x.evaluate(), y.evaluate())
   }
 
-  def +(e1: T, e2: T): T
-  def *(e1: T, e2: T): T
-  def additivelyInvert(x: T): T
-  def multiplicativelyInvert(x: T): T
-
-  def additiveIdentity(): T
-  def multiplicativeIdentity(): T
-
+  // a + b = b + a
   def commute(e: AdditionExpression): AdditionExpression = new AdditionExpression(e.y, e.x)
+
+  // ab = ba
   def commute(e: MultiplicationExpression): MultiplicationExpression = new MultiplicationExpression(e.y, e.x)
 
   // a + (b + c) = (a + b) + c

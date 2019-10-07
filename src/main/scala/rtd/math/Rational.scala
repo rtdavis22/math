@@ -1,29 +1,15 @@
 package rtd.math
 
-class ElementOfQ(val num: Int, val den: Int) {}
+class Q extends Field[(Int, Int)] {
+  override def +(a: (Int, Int), b: (Int, Int)): (Int, Int) = (a._1*b._2 + a._2*b._1, a._2*b._2)
 
-class Q extends Field[ElementOfQ] {
-  override def +(a: ElementOfQ, b: ElementOfQ): ElementOfQ = {
-    new ElementOfQ(a.num*b.den + a.den*b.num, a.den*b.den)
-  }
+  override def *(a: (Int, Int), b: (Int, Int)): (Int, Int) = (a._1*b._1, a._2*b._2)
 
-  override def *(a: ElementOfQ, b: ElementOfQ): ElementOfQ = {
-    new ElementOfQ(a.num*b.num, a.den*b.den)
-  }
+  override def -(q: (Int, Int)): (Int, Int) = (-q._1, q._2)
 
-  override def additivelyInvert(x: ElementOfQ): ElementOfQ = {
-    new ElementOfQ(-x.num, x.den)
-  }
+  override def invert(q: (Int, Int)): (Int, Int) = (q._2, q._1)
 
-  override def multiplicativelyInvert(x: ElementOfQ): ElementOfQ = {
-    new ElementOfQ(x.den, x.num)
-  }
+  override def zero(): (Int, Int) = (0, 0)
 
-  override def additiveIdentity(): ElementOfQ = {
-    new ElementOfQ(0, 0)
-  }
-
-  override def multiplicativeIdentity(): ElementOfQ = {
-    new ElementOfQ(1, 1)
-  }
+  override def one(): (Int, Int) = (1, 1)
 }

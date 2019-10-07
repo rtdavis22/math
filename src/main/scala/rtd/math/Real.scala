@@ -1,32 +1,33 @@
 package rtd.math
 
-class ElementOfR(var v: Double) {}
+import scala.reflect.Manifest
 
-class ℝ extends Field[ElementOfR] {
-  override def +(e1: ElementOfR, e2: ElementOfR): ElementOfR = {
-    new ElementOfR(e1.v + e2.v)
+class R(var v: Double) {
+  override def toString: String = v.toString
+}
+
+class ℝ extends Field[R] {
+  override def +(x: R, y: R): R = new R(x.v + y.v)
+
+  override def *(x: R, y: R): R = new R(x.v * y.v)
+
+  override def -(x: R): R = new R(-x.v)
+
+  override def invert(x: R): R = {
+    assert(x != zero())
+    new R(1.0/x.v)
   }
 
-  override def *(e1: ElementOfR, e2: ElementOfR): ElementOfR = {
-    new ElementOfR(e1.v * e2.v)
-  }
+  override def zero(): R = new R(0.0)
 
-  override def additivelyInvert(x: ElementOfR): ElementOfR = {
-    new ElementOfR(-x.v)
-  }
+  override def one(): R = new R(1.0)
+}
 
-  override def multiplicativelyInvert(x: ElementOfR): ElementOfR = {
-    if (x == multiplicativeIdentity) {
-      throw new Exception("cannot invert the multiplicative identity")
-    }
-    new ElementOfR(1.0/x.v)
-  }
+class RealVectorSpace[S <: SizeType](implicit manifest: Manifest[S]) extends CoordinateSpace[R, S](new  ℝ()) {}
 
-  override def additiveIdentity(): ElementOfR = {
-    new ElementOfR(0.0)
-  }
-
-  override def multiplicativeIdentity(): ElementOfR = {
-    new ElementOfR(1.0)
+object Real {
+  def main(args: Array[String]): Unit = {
+    val vs = new RealVectorSpace[I3]
+    println(vs.zero())
   }
 }

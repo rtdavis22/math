@@ -1,6 +1,16 @@
 package rtd.math
 
 abstract class VectorSpace[T, U](field: Field[U]) {
+  def +(v: T, w: T): T
+
+  def *(c: U, v: T): T
+
+  // v + (-v) = 0
+  def -(v: T): T
+
+  // v + 0 = v
+  def zero(): T
+
   class AdditionExpression(x: Expression[T], y: Expression[T]) extends BinaryExpression[T, T, T](x, y) {
     override def evaluate(): T = {
       VectorSpace.this.+(x.evaluate(), y.evaluate())
@@ -13,16 +23,22 @@ abstract class VectorSpace[T, U](field: Field[U]) {
     }
   }
 
-  def +(t1: T, t2: T): T
-  def *(a: U, x: T): T
+  // v = 0 + v
+  def addAdditiveIdentity(e: UnaryExpression[T]): AdditionExpression = {
+    new AdditionExpression(new UnaryExpression[T](zero()), e)
+  }
 
-  def additivelyInvert(t: T): T
-
-  def additiveIdentity(): T
+  // 0 + v = v
+  def removeAdditiveIdentity(e: AdditionExpression): Expression[T] = {
+    if (e.x.evaluate() != field.zero()) {
+      throw new Exception("cannot remove additive identity")
+    }
+    e.y
+  }
 
   // 1v = v
   def removeIdentity(e: MultiplicationExpression): Expression[T] = {
-    if (e.x != field.multiplicativeIdentity()) {
+    if (e.x != field.one()) {
       throw new Exception("cannot remove identity")
     }
     e.y
@@ -30,7 +46,7 @@ abstract class VectorSpace[T, U](field: Field[U]) {
 
   // v = 1v
   def addIdentity(e: UnaryExpression[T]): MultiplicationExpression = {
-    new MultiplicationExpression(new UnaryExpression[U](field.multiplicativeIdentity()), e)
+    new MultiplicationExpression(new UnaryExpression[U](field.one()), e)
   }
 
   // u + v = v + u
@@ -76,5 +92,26 @@ abstract class VectorSpace[T, U](field: Field[U]) {
       throw new Exception("cannot undistribute")
     }
     new MultiplicationExpression(new field.AdditionExpression(e1.x, e2.x), e1.y)
+  }
+}
+
+object VectorSpace {
+  // A vector space has a unique additive identity.
+  // Suppose x is also an additive identity...
+  def fn[T, U](vs: VectorSpace[T, U], x: T): Unit = {
+    // x = x + 0
+    val expression = vs.addAdditiveIdentity(new UnaryExpression[T](x))
+
+    // x + 0 = 0 + x
+    val commutedExpression = vs.commute(expression)
+
+    // 0 + x = 0
+    val expression2 = vs.removeAdditiveIdentity(commutedExpression)
+
+    // x = 0
+    assert(expression2.evaluate() == vs.zero())
+  }
+
+  def main(args: Array[String]): Unit = {
   }
 }
