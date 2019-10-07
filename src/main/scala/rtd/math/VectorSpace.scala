@@ -1,6 +1,6 @@
 package rtd.math
 
-abstract class VectorSpace[T, U](field: Field[U]) {
+abstract class VectorSpace[T, U, F <: Field[U]](val field: F) {
   def +(v: T, w: T): T
 
   def *(c: U, v: T): T
@@ -98,7 +98,7 @@ abstract class VectorSpace[T, U](field: Field[U]) {
 object VectorSpace {
   // A vector space has a unique additive identity.
   // Suppose x is also an additive identity...
-  def fn[T, U](vs: VectorSpace[T, U], x: T): Unit = {
+  def fn[T, U, F <: Field[U]](vs: VectorSpace[T, U, F], x: T): Unit = {
     // x = x + 0
     val expression = vs.addAdditiveIdentity(new UnaryExpression[T](x))
 

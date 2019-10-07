@@ -23,7 +23,7 @@ class ℝ extends Field[R] {
   override def one(): R = new R(1.0)
 }
 
-class RealVectorSpace[S <: SizeType](implicit manifest: Manifest[S]) extends CoordinateSpace[R, S](new  ℝ()) {}
+class RealVectorSpace[S <: SizeType](implicit manifest: Manifest[S]) extends CoordinateSpace[R, S, ℝ](new  ℝ()) {}
 
 object Real {
   def main(args: Array[String]): Unit = {

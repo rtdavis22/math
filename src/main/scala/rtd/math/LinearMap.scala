@@ -1,11 +1,11 @@
 package rtd.math
 
-abstract class LinearMap[V, W, E](val v: VectorSpace[V, E], val w: VectorSpace[W, E]) {
+abstract class LinearMap[V, W, E, F <: Field[E]](val v: VectorSpace[V, E, F], val w: VectorSpace[W, E, F]) {
   def apply(e: V): W
 
   // The product of two linear maps is defined as the composition of the maps: (ST)(u) = S(Tu)
-  def *[Y](t: LinearMap[W, Y, E]): LinearMap[V, Y, E] = {
-    new LinearMap[V, Y, E](v, t.w) {
+  def *[Y](t: LinearMap[W, Y, E, F]): LinearMap[V, Y, E, F] = {
+    new LinearMap[V, Y, E, F](v, t.w) {
       override def apply(e: V): Y = {
         t.apply(LinearMap.this.apply(e))
       }
@@ -21,43 +21,41 @@ abstract class LinearMap[V, W, E](val v: VectorSpace[V, E], val w: VectorSpace[W
 }
 
 // The set of linear maps from V to W forms a vector space
-class Hom[V, W, E](val v: VectorSpace[V, E], val w: VectorSpace[W, E], field: Field[E]) extends VectorSpace[LinearMap[V, W, E], E](field) {
-  override def +(s: LinearMap[V, W, E], t: LinearMap[V, W, E]): LinearMap[V, W, E] = {
-    new LinearMap[V, W, E](v, w) {
+class Hom[V, W, E, F <: Field[E]](val v: VectorSpace[V, E, F], val w: VectorSpace[W, E, F])
+  extends VectorSpace[LinearMap[V, W, E, F], E, F](v.field) {
+
+  override def +(s: LinearMap[V, W, E, F], t: LinearMap[V, W, E, F]): LinearMap[V, W, E, F] = {
+    new LinearMap[V, W, E, F](v, w) {
       override def apply(e: V): W = w.+(s.apply(e), t.apply(e))
     }
   }
 
-  override def *(c: E, s: LinearMap[V, W, E]): LinearMap[V, W, E] = {
-    new LinearMap[V, W, E](v, w) {
+  override def *(c: E, s: LinearMap[V, W, E, F]): LinearMap[V, W, E, F] = {
+    new LinearMap[V, W, E, F](v, w) {
       override def apply(e: V): W = w.*(c, s.apply(e))
     }
   }
 
-  override def -(s: LinearMap[V, W, E]): LinearMap[V, W, E] = {
-    new LinearMap[V, W, E](v, w) {
+  override def -(s: LinearMap[V, W, E, F]): LinearMap[V, W, E, F] = {
+    new LinearMap[V, W, E, F](v, w) {
       override def apply(e: V): W = w.-(s.apply(e))
     }
   }
 
-  override def zero(): LinearMap[V, W, E] = {
-    new LinearMap[V, W, E](v, w) {
+  override def zero(): LinearMap[V, W, E, F] = {
+    new LinearMap[V, W, E, F](v, w) {
       override def apply(e: V): W = w.zero()
     }
   }
 }
 
-// The endomorphisms of a linear map V
-class End[V, E](v: VectorSpace[V, E], field: Field[E]) extends Hom[V, V, E](v, v, field)
+// The endomorphisms of a vector space V (linear maps from V to itself)
+class End[V, E, F <: Field[E]](v: VectorSpace[V, E, F]) extends Hom[V, V, E, F](v, v)
 
-abstract class EndomorphicMap[T, E](v: VectorSpace[T, E]) extends LinearMap[T, T, E](v, v)
+abstract class EndomorphicMap[T, E, F <: Field[E]](v: VectorSpace[T, E, F]) extends LinearMap[T, T, E, F](v, v)
 
-class IdentityMap[T, E](v: VectorSpace[T, E]) extends EndomorphicMap[T,E](v) {
+class IdentityMap[T, E, F <: Field[E]](v: VectorSpace[T, E, F]) extends EndomorphicMap[T,E,F](v) {
   override def apply(e: T): T = e
-}
-
-class ZeroMap[T, V, E](v1: VectorSpace[T, E], v2: VectorSpace[V, E]) extends LinearMap[T, V, E](v1, v2) {
-  override def apply(v: T): V = v2.zero()
 }
 
 object LinearMapMain {
@@ -65,7 +63,7 @@ object LinearMapMain {
     val vs = new RealVectorSpace[I3]()
     val m2 = new IdentityMap(new RealVectorSpace[I3]())
 
-    val hom = new Hom(vs, vs, new ℝ)
+    val hom = new Hom(vs, vs)
     val zeroMap = hom.zero()
     val res = zeroMap.apply(vs.zero())
     println(res)

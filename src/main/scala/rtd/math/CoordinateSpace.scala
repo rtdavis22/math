@@ -13,8 +13,8 @@ class Coordinate[T, I <: SizeType](v: T)(implicit manifest: Manifest[I], implici
   override def toString: String = array.toSeq.toString
 }
 
-class CoordinateSpace[T, S <: SizeType](field: Field[T])(implicit manifest: Manifest[S], m: ClassTag[T])
-    extends VectorSpace[Coordinate[T, S], T](field) {
+class CoordinateSpace[T, S <: SizeType, F <: Field[T]](field: F)(implicit manifest: Manifest[S], m: ClassTag[T])
+    extends VectorSpace[Coordinate[T, S], T, F](field) {
   override def +(t1: Coordinate[T, S], t2: Coordinate[T, S]): Coordinate[T, S] = {
     val s = zero()
     for (i <- 0 until s.length) {
