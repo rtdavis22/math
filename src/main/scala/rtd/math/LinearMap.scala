@@ -3,6 +3,11 @@ package rtd.math
 abstract class LinearMap[V, W, E, F <: Field[E]](val v: VectorSpace[V, E, F], val w: VectorSpace[W, E, F]) {
   def apply(e: V): W
 
+  // The matrix of a linear map with respect to a basis
+  def getMatrix(basis: List[V]): List[W] = {
+    basis.map(apply)
+  }
+
   // T(v + w) = T(v) + T(w)
   def apply(e: v.AdditionExpression): w.AdditionExpression = {
     new w.AdditionExpression(

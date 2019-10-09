@@ -11,6 +11,12 @@ abstract class VectorSpace[T, U, F <: Field[U]](val field: F) {
   // v + 0 = v
   def zero(): T
 
+  // The vector v derived from a basis of the vector space and scalars M(v).
+  // The one-column matrix M(v) is defined as the matrix of the vector v.
+  def getFromBasisAndScalars(basis: List[T], m: List[U]): T = {
+    m.zip(basis).map(p => *(p._1, p._2)).iterator.reduce(+)
+  }
+
   class AdditionExpression(x: Expression[T], y: Expression[T]) extends BinaryExpression[T, T, T](x, y) {
     override def evaluate(): T = {
       VectorSpace.this.+(x.evaluate(), y.evaluate())
