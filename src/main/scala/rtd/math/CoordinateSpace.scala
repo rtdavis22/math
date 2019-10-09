@@ -42,6 +42,18 @@ class CoordinateSpace[T, S <: SizeType, F <: Field[T]](field: F)(implicit manife
   override def zero(): Coordinate[T, S] = {
     new Coordinate[T, S](field.zero())
   }
+
+  def standardBasis(): List[Coordinate[T, S]] = {
+    var basis = List[Coordinate[T, S]]()
+    // Better way to get length?
+    val length = new Coordinate[T, S](field.zero()).length
+    for (i <- 0 until length) {
+      val c = new Coordinate[T, S](field.zero())
+      c.array(i) = field.one()
+      basis = basis :+ c
+    }
+    basis
+  }
 }
 
 class I3 extends SizeType { val value = 3 }
