@@ -102,6 +102,19 @@ abstract class VectorSpace[T, U, F <: Field[U]](val field: F) {
 }
 
 object VectorSpace {
+  // The product of vector spaces over the same field is a vector space.
+  def *[S, T, U, F <: Field[U]](v: VectorSpace[S, U, F], w: VectorSpace[T, U, F]): VectorSpace[(S, T), U, F] = {
+    new VectorSpace[(S, T), U, F](v.field) {
+      override def +(s: (S, T), t: (S, T)): (S, T) = (v.+(s._1, t._1), w.+(s._2, t._2))
+
+      override def *(c: U, s: (S, T)): (S, T) = (v.*(c, s._1), w.*(c, s._2))
+
+      override def -(s: (S, T)): (S, T) = (v.-(s._1), w.-(s._2))
+
+      override def zero(): (S, T) = (v.zero(), w.zero())
+    }
+  }
+
   // A vector space has a unique additive identity.
   // Suppose x is also an additive identity...
   def fn[T, U, F <: Field[U]](vs: VectorSpace[T, U, F], x: T): Unit = {
