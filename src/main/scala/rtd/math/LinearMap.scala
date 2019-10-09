@@ -3,15 +3,6 @@ package rtd.math
 abstract class LinearMap[V, W, E, F <: Field[E]](val v: VectorSpace[V, E, F], val w: VectorSpace[W, E, F]) {
   def apply(e: V): W
 
-  // The product of two linear maps is defined as the composition of the maps: (ST)(u) = S(Tu)
-  def *[Y](t: LinearMap[W, Y, E, F]): LinearMap[V, Y, E, F] = {
-    new LinearMap[V, Y, E, F](v, t.w) {
-      override def apply(e: V): Y = {
-        t.apply(LinearMap.this.apply(e))
-      }
-    }
-  }
-
   // T(v + w) = T(v) + T(w)
   def apply(e: v.AdditionExpression): w.AdditionExpression = {
     new w.AdditionExpression(
@@ -45,6 +36,13 @@ class Hom[V, W, E, F <: Field[E]](val v: VectorSpace[V, E, F], val w: VectorSpac
   override def zero(): LinearMap[V, W, E, F] = {
     new LinearMap[V, W, E, F](v, w) {
       override def apply(e: V): W = w.zero()
+    }
+  }
+
+  // The product of two linear maps is defined as the composition of the maps: (ST)(u) = S(Tu)
+  def *[Y](s: LinearMap[W, Y, E, F], t: LinearMap[V, W, E, F]): LinearMap[V, Y, E, F] = {
+    new LinearMap[V, Y, E, F](v, s.w) {
+      override def apply(e: V): Y = s.apply(t.apply(e))
     }
   }
 }
