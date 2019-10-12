@@ -6,15 +6,15 @@ abstract class SizeType {
   val value: Int
 }
 
-class Coordinate[T, I <: SizeType](v: T)(implicit manifest: Manifest[I], implicit var m: ClassTag[T]) {
+class Coordinate[T, +I <: SizeType](v: T)(implicit manifest: Manifest[I], implicit var m: ClassTag[T]) {
   val length: Int = manifest.erasure.asInstanceOf[Class[I]].newInstance.value
   val array = Array.fill[T](length)(v)
 
   override def toString: String = array.toSeq.toString
 }
 
-class CoordinateSpace[T, S <: SizeType, F <: Field[T]](field: F)(implicit manifest: Manifest[S], m: ClassTag[T])
-    extends VectorSpace[Coordinate[T, S], T, F](field) {
+class CoordinateSpace[T, S <: SizeType](override val field: Field[T])(implicit manifest: Manifest[S], m: ClassTag[T])
+    extends VectorSpace[Coordinate[T, S], T] {
   override def +(t1: Coordinate[T, S], t2: Coordinate[T, S]): Coordinate[T, S] = {
     val s = zero()
     for (i <- 0 until s.length) {

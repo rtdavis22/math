@@ -1,41 +1,43 @@
 package rtd.math
 
-abstract class VectorSpace[T, U, F <: Field[U]](val field: F) {
-  def +(v: T, w: T): T
+abstract class VectorSpace[V, E] {
+  val field: Field[E]
 
-  def *(c: U, v: T): T
+  def +(v: V, w: V): V
+
+  def *(c: E, v: V): V
 
   // v + (-v) = 0
-  def -(v: T): T
+  def -(v: V): V
 
   // v + 0 = v
-  def zero(): T
+  def zero(): V
 
   // The vector v derived from a basis of the vector space and scalars M(v).
   // The one-column matrix M(v) is defined as the matrix of the vector v.
-  def getFromBasisAndScalars(basis: List[T], m: List[U]): T = {
+  def getFromBasisAndScalars(basis: List[V], m: List[E]): V = {
     m.zip(basis).map(p => *(p._1, p._2)).iterator.reduce(+)
   }
 
-  class AdditionExpression(x: Expression[T], y: Expression[T]) extends BinaryExpression[T, T, T](x, y) {
-    override def evaluate(): T = {
+  class AdditionExpression(x: Expression[V], y: Expression[V]) extends BinaryExpression[V, V, V](x, y) {
+    override def evaluate(): V = {
       VectorSpace.this.+(x.evaluate(), y.evaluate())
     }
   }
 
-  class MultiplicationExpression(scalar: Expression[U], x: Expression[T]) extends BinaryExpression[U, T, T](scalar, x) {
-    def evaluate(): T = {
+  class MultiplicationExpression(scalar: Expression[E], x: Expression[V]) extends BinaryExpression[E, V, V](scalar, x) {
+    def evaluate(): V = {
       VectorSpace.this.*(scalar.evaluate(), x.evaluate())
     }
   }
 
   // v = 0 + v
-  def addAdditiveIdentity(e: UnaryExpression[T]): AdditionExpression = {
-    new AdditionExpression(new UnaryExpression[T](zero()), e)
+  def addAdditiveIdentity(e: UnaryExpression[V]): AdditionExpression = {
+    new AdditionExpression(new UnaryExpression[V](zero()), e)
   }
 
   // 0 + v = v
-  def removeAdditiveIdentity(e: AdditionExpression): Expression[T] = {
+  def removeAdditiveIdentity(e: AdditionExpression): Expression[V] = {
     if (e.x.evaluate() != field.zero()) {
       throw new Exception("cannot remove additive identity")
     }
@@ -43,7 +45,7 @@ abstract class VectorSpace[T, U, F <: Field[U]](val field: F) {
   }
 
   // 1v = v
-  def removeIdentity(e: MultiplicationExpression): Expression[T] = {
+  def removeIdentity(e: MultiplicationExpression): Expression[V] = {
     if (e.x != field.one()) {
       throw new Exception("cannot remove identity")
     }
@@ -51,25 +53,25 @@ abstract class VectorSpace[T, U, F <: Field[U]](val field: F) {
   }
 
   // v = 1v
-  def addIdentity(e: UnaryExpression[T]): MultiplicationExpression = {
-    new MultiplicationExpression(new UnaryExpression[U](field.one()), e)
+  def addIdentity(e: UnaryExpression[V]): MultiplicationExpression = {
+    new MultiplicationExpression(new UnaryExpression[E](field.one()), e)
   }
 
   // u + v = v + u
   def commute(e: AdditionExpression): AdditionExpression = new AdditionExpression(e.y, e.x)
 
   // a(bv) = (ab)v
-  def reassoc(scalar: Expression[U], e: MultiplicationExpression): MultiplicationExpression = {
+  def reassoc(scalar: Expression[E], e: MultiplicationExpression): MultiplicationExpression = {
     new MultiplicationExpression(new field.MultiplicationExpression(scalar, e.x), e.y)
   }
 
   // (ab)v = a(bv)
-  def reassoc(e: field.MultiplicationExpression, t: T): MultiplicationExpression = {
-    new MultiplicationExpression(e.x, new MultiplicationExpression(e.y, new UnaryExpression[T](t)))
+  def reassoc(e: field.MultiplicationExpression, t: V): MultiplicationExpression = {
+    new MultiplicationExpression(e.x, new MultiplicationExpression(e.y, new UnaryExpression[V](t)))
   }
 
   // a(u + v) = au + av
-  def distributeScalar(scalar: Expression[U], e: AdditionExpression): AdditionExpression = {
+  def distributeScalar(scalar: Expression[E], e: AdditionExpression): AdditionExpression = {
     new AdditionExpression(
       new MultiplicationExpression(scalar, e.x),
       new MultiplicationExpression(scalar, e.y)
@@ -85,10 +87,10 @@ abstract class VectorSpace[T, U, F <: Field[U]](val field: F) {
   }
 
   // (a + b)v = av + bv
-  def distributeVector(e: field.AdditionExpression, t: T): AdditionExpression = {
+  def distributeVector(e: field.AdditionExpression, t: V): AdditionExpression = {
     new AdditionExpression(
-      new MultiplicationExpression(e.x, new UnaryExpression[T](t)),
-      new MultiplicationExpression(e.y, new UnaryExpression[T](t))
+      new MultiplicationExpression(e.x, new UnaryExpression[V](t)),
+      new MultiplicationExpression(e.y, new UnaryExpression[V](t))
     )
   }
 
@@ -103,23 +105,25 @@ abstract class VectorSpace[T, U, F <: Field[U]](val field: F) {
 
 object VectorSpace {
   // The product of vector spaces over the same field is a vector space.
-  def *[S, T, U, F <: Field[U]](v: VectorSpace[S, U, F], w: VectorSpace[T, U, F]): VectorSpace[(S, T), U, F] = {
-    new VectorSpace[(S, T), U, F](v.field) {
-      override def +(s: (S, T), t: (S, T)): (S, T) = (v.+(s._1, t._1), w.+(s._2, t._2))
+  def *[V, W, E](V: VectorSpace[V, E], W: VectorSpace[W, E]): VectorSpace[(V, W), E] = {
+    new VectorSpace[(V, W), E] {
+      override val field: Field[E] = V.field
 
-      override def *(c: U, s: (S, T)): (S, T) = (v.*(c, s._1), w.*(c, s._2))
+      override def +(v: (V, W), w: (V, W)): (V, W) = (V.+(v._1, w._1), W.+(v._2, w._2))
 
-      override def -(s: (S, T)): (S, T) = (v.-(s._1), w.-(s._2))
+      override def *(e: E, v: (V, W)): (V, W) = (V.*(e, v._1), W.*(e, v._2))
 
-      override def zero(): (S, T) = (v.zero(), w.zero())
+      override def -(v: (V, W)): (V, W) = (V.-(v._1), W.-(v._2))
+
+      override def zero(): (V, W) = (V.zero(), W.zero())
     }
   }
 
   // A vector space has a unique additive identity.
   // Suppose x is also an additive identity...
-  def fn[T, U, F <: Field[U]](vs: VectorSpace[T, U, F], x: T): Unit = {
+  def fn[V, E](vs: VectorSpace[V, E], x: V): Unit = {
     // x = x + 0
-    val expression = vs.addAdditiveIdentity(new UnaryExpression[T](x))
+    val expression = vs.addAdditiveIdentity(new UnaryExpression[V](x))
 
     // x + 0 = 0 + x
     val commutedExpression = vs.commute(expression)

@@ -1,18 +1,21 @@
 package rtd.math
 
-trait Field[T] {
-  def +(e1: T, e2: T): T
+// A field is a vector space where the scalar type and the element type are the same
+abstract class Field[T] extends VectorSpace[T, T] {
+  override val field: Field[T] = this
 
-  def *(e1: T, e2: T): T
+  override def +(e1: T, e2: T): T
+
+  override def *(e1: T, e2: T): T
 
   // x + (-x) = 0
-  def -(x: T): T
+  override def -(x: T): T
+
+  // x + 0 = x
+  override def zero(): T
 
   // x(1/x) = 1
   def invert(x: T): T
-
-  // x + 0 = x
-  def zero(): T
 
   // x1 = x
   def one(): T

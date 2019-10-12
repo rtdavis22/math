@@ -1,7 +1,7 @@
 package rtd.math
 
 // The vector space of functions from a set S to a field with elements in T.
-class Functions[S, T, F <: Field[T]](field: F) extends VectorSpace[S => T, T, F](field) {
+class Functions[S, T](override val field: Field[T]) extends VectorSpace[S => T, T] {
   // (f + g)(x) = f(x) + g(x)
   override def +(f: S => T, g: S => T): S => T = s => field.+(f(s), g(s))
 
@@ -17,7 +17,7 @@ class Functions[S, T, F <: Field[T]](field: F) extends VectorSpace[S => T, T, F]
 
 object Functions {
   def main(args: Array[String]): Unit = {
-    val vs2 = new Functions[(Int, Int), R, ℝ](new  ℝ())
+    val vs2 = new Functions[(Int, Int), R](new  ℝ())
     val func = (q: (Int, Int)) => new R(q._1 + q._2)
     val f2 = vs2.+(func, func)
     val res = f2((5, 3))
