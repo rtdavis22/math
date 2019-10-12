@@ -19,6 +19,8 @@ abstract class VectorSpace[V, E] {
     m.zip(basis).map(p => *(p._1, p._2)).iterator.reduce(+)
   }
 
+  def dual: DualSpace[V, E] = new DualSpace(this)
+
   class AdditionExpression(x: Expression[V], y: Expression[V]) extends BinaryExpression[V, V, V](x, y) {
     override def evaluate(): V = {
       VectorSpace.this.+(x.evaluate(), y.evaluate())
