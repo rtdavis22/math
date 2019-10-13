@@ -5,7 +5,7 @@ abstract class VectorSpace[V, E] {
 
   def +(v: V, w: V): V
 
-  // v + w = w + v, so parens aren't necessary when adding.
+  // Addition is associative, so parens aren't necessary.
   def +(vs: V*): V = vs.fold(zero)(+)
 
   def *(c: E, v: V): V

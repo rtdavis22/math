@@ -21,11 +21,11 @@ class EvaluationMap[T](field: Field[T], x: T) extends LinearFunctional(new Polyn
   }
 }
 
-class RealEvaluationMap(x: R) extends EvaluationMap(new ℝ, x)
+class RealEvaluationMap(x: R) extends EvaluationMap(new Reals, x)
 
 // A linear map that maps a polynomial p to its derivative, p'.
-class RealDerivativeMap extends EndomorphicMap(new Polynomial(new ℝ)) {
+class RealDerivativeMap extends EndomorphicMap(new Polynomial(new Reals)) {
   override def apply(p: List[R]): List[R] = {
-    p.zipWithIndex.map(c => V.field.*(new R(c._2), c._1)).drop(1)
+    p.zipWithIndex.map(c => V.field.*(R(c._2), c._1)).drop(1)
   }
 }

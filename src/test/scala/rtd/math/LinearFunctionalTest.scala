@@ -9,6 +9,6 @@ class LinearFunctionalTest extends FunSuite with Matchers {
         W.+(v(0), v(1), v(2))
       }
     }
-    lf.apply(new Coordinate[R, I3](new R(3.0))).v shouldBe 9.0
+    lf.apply(new Coordinate[R, I3](R(3.0))).v shouldBe 9.0
   }
 }
