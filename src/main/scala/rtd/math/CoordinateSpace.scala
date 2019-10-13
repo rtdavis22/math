@@ -58,8 +58,3 @@ class CoordinateSpace[T, S <: SizeType](override val field: Field[T])(implicit m
 
 class I3 extends SizeType { val value = 3 }
 class I4 extends SizeType { val value = 4 }
-
-object CoordinateSpace {
-  def main(args: Array[String]): Unit = {
-  }
-}

@@ -136,7 +136,4 @@ object VectorSpace {
     // x = 0
     assert(expression2.evaluate() == vs.zero)
   }
-
-  def main(args: Array[String]): Unit = {
-  }
 }

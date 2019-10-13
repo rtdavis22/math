@@ -24,10 +24,3 @@ class ℝ extends Field[R] {
 }
 
 class RealVectorSpace[S <: SizeType](implicit manifest: Manifest[S]) extends CoordinateSpace[R, S](new  ℝ()) {}
-
-object Real {
-  def main(args: Array[String]): Unit = {
-    val vs = new RealVectorSpace[I3]
-    println(vs.zero)
-  }
-}

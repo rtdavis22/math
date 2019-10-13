@@ -62,15 +62,3 @@ abstract class EndomorphicMap[V, E](V: VectorSpace[V, E]) extends LinearMap[V, V
 class IdentityMap[V, E](V: VectorSpace[V, E]) extends EndomorphicMap[V, E](V) {
   override def apply(v: V): V = v
 }
-
-object LinearMapMain {
-  def main(args: Array[String]): Unit = {
-    val vs = new RealVectorSpace[I3]
-    val m2 = new IdentityMap(vs)
-
-    val hom = new Hom(vs, vs)
-    val zeroMap = hom.zero
-    val res = zeroMap.apply(vs.zero)
-    println(res)
-  }
-}

@@ -29,14 +29,3 @@ class RealDerivativeMap extends EndomorphicMap(new Polynomial(new ℝ)) {
     p.zipWithIndex.map(c => V.field.*(new R(c._2), c._1)).drop(1)
   }
 }
-
-object PolynomialMain {
-  def main(args: Array[String]): Unit = {
-    // D' when applied to phi is the linear functional that takes p to p'(3).
-    val dPrime = new DualMap(new RealDerivativeMap)
-    val phi = new RealEvaluationMap(new R(3.0))
-    val lf = dPrime.apply(phi)
-    val result = lf.apply(List(new R(1.0), new R(0.0), new R(3.0)))
-    println(result)
-  }
-}

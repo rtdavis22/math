@@ -46,15 +46,3 @@ class DualMap[V, W, E](t: LinearMap[V, W, E]) extends LinearMap(new DualSpace(t.
     }
   }
 }
-
-object LinearFunctionMain {
-  def main(args: Array[String]): Unit = {
-    val lf = new LinearFunctional(new RealVectorSpace[I3]) {
-      override def apply(v: Coordinate[R, I3]): R = {
-        W.+(W.+(v.array(0), v.array(1)), v.array(2))
-      }
-    }
-    val c = new Coordinate[R, I3](new R(3.0))
-    println(lf.apply(c))
-  }
-}

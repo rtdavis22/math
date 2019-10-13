@@ -14,14 +14,3 @@ class Functions[S, T](override val field: Field[T]) extends VectorSpace[S => T, 
   // 0(x) = 0
   override def zero: S => T = _ => field.zero
 }
-
-object Functions {
-  def main(args: Array[String]): Unit = {
-    val vs2 = new Functions[(Int, Int), R](new  ℝ())
-    val func = (q: (Int, Int)) => new R(q._1 + q._2)
-    val f2 = vs2.+(func, func)
-    val res = f2((5, 3))
-
-    println(res)
-  }
-}
