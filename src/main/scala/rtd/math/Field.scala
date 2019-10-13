@@ -20,6 +20,10 @@ abstract class Field[T] extends VectorSpace[T, T] {
   // x1 = x
   def one(): T
 
+  def pow(x: T, n: Int): T = {
+    List.fill(n)(x).fold(field.one())(field.*)
+  }
+
   class AdditionExpression(x: Expression[T], y: Expression[T]) extends BinaryExpression[T, T, T](x, y) {
     override def evaluate(): T = Field.this.+(x.evaluate(), y.evaluate())
   }

@@ -1,8 +1,9 @@
 package rtd.math
 
+// A linear functional is a linear map from a vector space to its field of scalars.
 abstract class LinearFunctional[V, E](v: VectorSpace[V, E]) extends LinearMap[V, E, E](v, v.field)
 
-// The dual space of V, the vector space consisting of all linear functionals on V
+// The dual space of V, the vector space consisting of all linear functionals on V, is a vector space.
 class DualSpace[V, E](V: VectorSpace[V, E]) extends VectorSpace[LinearFunctional[V, E], E] {
   val field: Field[E] = V.field
 
