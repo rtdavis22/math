@@ -40,9 +40,9 @@ class Hom[V, W, E](val V: VectorSpace[V, E], val W: VectorSpace[W, E]) extends V
     }
   }
 
-  override def zero(): LinearMap[V, W, E] = {
+  override def zero: LinearMap[V, W, E] = {
     new LinearMap[V, W, E](V, W) {
-      override def apply(e: V): W = W.zero()
+      override def apply(e: V): W = W.zero
     }
   }
 
@@ -69,8 +69,8 @@ object LinearMapMain {
     val m2 = new IdentityMap(vs)
 
     val hom = new Hom(vs, vs)
-    val zeroMap = hom.zero()
-    val res = zeroMap.apply(vs.zero())
+    val zeroMap = hom.zero
+    val res = zeroMap.apply(vs.zero)
     println(res)
   }
 }

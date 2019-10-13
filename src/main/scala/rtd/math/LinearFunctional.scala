@@ -25,16 +25,16 @@ class DualSpace[V, E](V: VectorSpace[V, E]) extends VectorSpace[LinearFunctional
     }
   }
 
-  override def zero(): LinearFunctional[V, E] = {
+  override def zero: LinearFunctional[V, E] = {
     new LinearFunctional(V) {
-      override def apply(v: V): E = field.zero()
+      override def apply(v: V): E = field.zero
     }
   }
 
   // TODO: Is this correct?
   def basis(basisForV: List[V]): List[LinearFunctional[V, E]] = {
     basisForV.map(v => new LinearFunctional(V) {
-      override def apply(w: V): E = if (w == v) field.one() else field.zero()
+      override def apply(w: V): E = if (w == v) field.one else field.zero
     })
   }
 }

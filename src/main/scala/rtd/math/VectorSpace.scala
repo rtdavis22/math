@@ -11,7 +11,7 @@ abstract class VectorSpace[V, E] {
   def -(v: V): V
 
   // v + 0 = v
-  def zero(): V
+  def zero: V
 
   // The vector v derived from a basis of the vector space and scalars M(v).
   // The one-column matrix M(v) is defined as the matrix of the vector v.
@@ -35,12 +35,12 @@ abstract class VectorSpace[V, E] {
 
   // v = 0 + v
   def addAdditiveIdentity(e: UnaryExpression[V]): AdditionExpression = {
-    new AdditionExpression(new UnaryExpression[V](zero()), e)
+    new AdditionExpression(new UnaryExpression[V](zero), e)
   }
 
   // 0 + v = v
   def removeAdditiveIdentity(e: AdditionExpression): Expression[V] = {
-    if (e.x.evaluate() != field.zero()) {
+    if (e.x.evaluate() != field.zero) {
       throw new Exception("cannot remove additive identity")
     }
     e.y
@@ -48,7 +48,7 @@ abstract class VectorSpace[V, E] {
 
   // 1v = v
   def removeIdentity(e: MultiplicationExpression): Expression[V] = {
-    if (e.x != field.one()) {
+    if (e.x != field.one) {
       throw new Exception("cannot remove identity")
     }
     e.y
@@ -56,7 +56,7 @@ abstract class VectorSpace[V, E] {
 
   // v = 1v
   def addIdentity(e: UnaryExpression[V]): MultiplicationExpression = {
-    new MultiplicationExpression(new UnaryExpression[E](field.one()), e)
+    new MultiplicationExpression(new UnaryExpression[E](field.one), e)
   }
 
   // u + v = v + u
@@ -117,7 +117,7 @@ object VectorSpace {
 
       override def -(v: (V, W)): (V, W) = (V.-(v._1), W.-(v._2))
 
-      override def zero(): (V, W) = (V.zero(), W.zero())
+      override def zero: (V, W) = (V.zero, W.zero)
     }
   }
 
@@ -134,7 +134,7 @@ object VectorSpace {
     val expression2 = vs.removeAdditiveIdentity(commutedExpression)
 
     // x = 0
-    assert(expression2.evaluate() == vs.zero())
+    assert(expression2.evaluate() == vs.zero)
   }
 
   def main(args: Array[String]): Unit = {

@@ -12,16 +12,16 @@ abstract class Field[T] extends VectorSpace[T, T] {
   override def -(x: T): T
 
   // x + 0 = x
-  override def zero(): T
+  override def zero: T
 
   // x(1/x) = 1
   def invert(x: T): T
 
   // x1 = x
-  def one(): T
+  def one: T
 
   def pow(x: T, n: Int): T = {
-    List.fill(n)(x).fold(field.one())(field.*)
+    List.fill(n)(x).fold(field.one)(field.*)
   }
 
   class AdditionExpression(x: Expression[T], y: Expression[T]) extends BinaryExpression[T, T, T](x, y) {

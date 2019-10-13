@@ -12,7 +12,7 @@ class Functions[S, T](override val field: Field[T]) extends VectorSpace[S => T, 
   override def -(f: S => T): S => T = s => field.-(f(s))
 
   // 0(x) = 0
-  override def zero(): S => T = _ => field.zero()
+  override def zero: S => T = _ => field.zero
 }
 
 object Functions {

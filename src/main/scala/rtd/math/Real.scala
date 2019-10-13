@@ -14,13 +14,13 @@ class ℝ extends Field[R] {
   override def -(x: R): R = new R(-x.v)
 
   override def invert(x: R): R = {
-    assert(x != zero())
+    assert(x != zero)
     new R(1.0/x.v)
   }
 
-  override def zero(): R = new R(0.0)
+  override def zero: R = new R(0.0)
 
-  override def one(): R = new R(1.0)
+  override def one: R = new R(1.0)
 }
 
 class RealVectorSpace[S <: SizeType](implicit manifest: Manifest[S]) extends CoordinateSpace[R, S](new  ℝ()) {}
@@ -28,6 +28,6 @@ class RealVectorSpace[S <: SizeType](implicit manifest: Manifest[S]) extends Coo
 object Real {
   def main(args: Array[String]): Unit = {
     val vs = new RealVectorSpace[I3]
-    println(vs.zero())
+    println(vs.zero)
   }
 }

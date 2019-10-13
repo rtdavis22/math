@@ -9,7 +9,7 @@ class Q extends Field[(Int, Int)] {
 
   override def invert(q: (Int, Int)): (Int, Int) = (q._2, q._1)
 
-  override def zero(): (Int, Int) = (0, 0)
+  override def zero: (Int, Int) = (0, 0)
 
-  override def one(): (Int, Int) = (1, 1)
+  override def one: (Int, Int) = (1, 1)
 }
