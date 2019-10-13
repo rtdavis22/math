@@ -15,7 +15,6 @@ class Polynomial[E](override val field: Field[E]) extends VectorSpace[List[E], E
 }
 
 // A linear functional that maps a polynomial p to p(x), the polynomial evaluated at x.
-// This could be made more general to work over any polynomial.
 class EvaluationMap[T](field: Field[T], x: T) extends LinearFunctional(new Polynomial(field)) {
   override def apply(p: List[T]): T = {
     p.zipWithIndex.map(c => V.field.*(c._1, V.field.pow(x, c._2))).reduce(V.field.+)
@@ -33,5 +32,11 @@ class RealDerivativeMap extends EndomorphicMap(new Polynomial(new ℝ)) {
 
 object PolynomialMain {
   def main(args: Array[String]): Unit = {
+    // D' when applied to phi is the linear functional that takes p to p'(3).
+    val dPrime = new DualMap(new RealDerivativeMap)
+    val phi = new RealEvaluationMap(new R(3.0))
+    val lf = dPrime.apply(phi)
+    val result = lf.apply(List(new R(1.0), new R(0.0), new R(3.0)))
+    println(result)
   }
 }
