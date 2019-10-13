@@ -15,13 +15,13 @@ class Polynomial[E](override val field: Field[E]) extends VectorSpace[List[E], E
 }
 
 // A linear functional that maps a polynomial p to p(x), the polynomial evaluated at x.
-class EvaluationMap[T](field: Field[T], x: T) extends LinearFunctional(new Polynomial(field)) {
+class EvaluationFunctional[T](field: Field[T], x: T) extends LinearFunctional(new Polynomial(field)) {
   override def apply(p: List[T]): T = {
     p.zipWithIndex.map(c => V.field.*(c._1, V.field.pow(x, c._2))).reduce(V.field.+)
   }
 }
 
-class RealEvaluationMap(x: R) extends EvaluationMap(new Reals, x)
+class RealEvaluationFunctional(x: R) extends EvaluationFunctional(new Reals, x)
 
 // A linear map that maps a polynomial p to its derivative, p'.
 class RealDerivativeMap extends EndomorphicMap(new Polynomial(new Reals)) {
