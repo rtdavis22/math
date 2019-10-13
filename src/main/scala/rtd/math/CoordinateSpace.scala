@@ -8,9 +8,13 @@ abstract class SizeType {
 
 class Coordinate[T, +I <: SizeType](v: T)(implicit manifest: Manifest[I], implicit var m: ClassTag[T]) {
   val length: Int = manifest.erasure.asInstanceOf[Class[I]].newInstance.value
-  val array: Array[T] = Array.fill[T](length)(v)
+  private[this] val array: Array[T] = Array.fill[T](length)(v)
 
   override def toString: String = array.toSeq.toString
+
+  def apply(i: Int): T = array(i)
+
+  def update(i: Int, t: T): Unit = array(i) = t
 }
 
 class CoordinateSpace[T, S <: SizeType](override val field: Field[T])(implicit manifest: Manifest[S], m: ClassTag[T])
@@ -18,7 +22,7 @@ class CoordinateSpace[T, S <: SizeType](override val field: Field[T])(implicit m
   override def +(t1: Coordinate[T, S], t2: Coordinate[T, S]): Coordinate[T, S] = {
     val s = zero
     for (i <- 0 until s.length) {
-      s.array(i) = field.+(t1.array(i), t2.array(i))
+      s(i) = field.+(t1(i), t2(i))
     }
     s
   }
@@ -26,7 +30,7 @@ class CoordinateSpace[T, S <: SizeType](override val field: Field[T])(implicit m
   override def *(a: T, t: Coordinate[T, S]): Coordinate[T, S] = {
     val s = zero
     for (i <- 0 until s.length) {
-      s.array(i) = field.*(a, t.array(i))
+      s(i) = field.*(a, t(i))
     }
     s
   }
@@ -34,7 +38,7 @@ class CoordinateSpace[T, S <: SizeType](override val field: Field[T])(implicit m
   override def -(t: Coordinate[T, S]): Coordinate[T, S] = {
     val s = zero
     for (i <- 0 until s.length) {
-      s.array(i) = field.-(t.array(i))
+      s(i) = field.-(t(i))
     }
     s
   }
@@ -49,7 +53,7 @@ class CoordinateSpace[T, S <: SizeType](override val field: Field[T])(implicit m
     val length = new Coordinate[T, S](field.zero).length
     for (i <- 0 until length) {
       val c = new Coordinate[T, S](field.zero)
-      c.array(i) = field.one
+      c(i) = field.one
       basis = basis :+ c
     }
     basis
