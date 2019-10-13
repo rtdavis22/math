@@ -6,7 +6,7 @@ abstract class VectorSpace[V, E] {
   def +(v: V, w: V): V
 
   // Addition is associative, so parens aren't necessary.
-  def +(vs: V*): V = vs.fold(zero)(+)
+  def +(vs: V*): V = vs.fold(zero)(this.+)
 
   def *(c: E, v: V): V
 
@@ -19,7 +19,7 @@ abstract class VectorSpace[V, E] {
   // The vector v derived from a basis of the vector space and scalars M(v).
   // The one-column matrix M(v) is defined as the matrix of the vector v.
   def getFromBasisAndScalars(basis: List[V], m: List[E]): V = {
-    m.zip(basis).map(p => *(p._1, p._2)).iterator.reduce(+)
+    m.zip(basis).map(p => *(p._1, p._2)).iterator.reduce(this.+)
   }
 
   def dual: DualSpace[V, E] = new DualSpace(this)

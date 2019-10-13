@@ -5,7 +5,4 @@ test:
 	sbt test
 
 lint:
-	sbt scalastyle
-
-lint-tests:
-	sbt test:scalastyle
+	sbt scalastyle test:scalastyle
