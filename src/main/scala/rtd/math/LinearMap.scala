@@ -24,19 +24,19 @@ class Hom[V, W, E](val V: VectorSpace[V, E], val W: VectorSpace[W, E]) extends V
 
   override def +(s: LinearMap[V, W, E], t: LinearMap[V, W, E]): LinearMap[V, W, E] = {
     new LinearMap[V, W, E](V, W) {
-      override def apply(e: V): W = W.+(s.apply(e), t.apply(e))
+      override def apply(e: V): W = W.+(s(e), t(e))
     }
   }
 
   override def *(c: E, s: LinearMap[V, W, E]): LinearMap[V, W, E] = {
     new LinearMap[V, W, E](V, W) {
-      override def apply(e: V): W = W.*(c, s.apply(e))
+      override def apply(e: V): W = W.*(c, s(e))
     }
   }
 
   override def -(s: LinearMap[V, W, E]): LinearMap[V, W, E] = {
     new LinearMap[V, W, E](V, W) {
-      override def apply(e: V): W = W.-(s.apply(e))
+      override def apply(e: V): W = W.-(s(e))
     }
   }
 
@@ -49,7 +49,7 @@ class Hom[V, W, E](val V: VectorSpace[V, E], val W: VectorSpace[W, E]) extends V
   // The product of two linear maps is defined as the composition of the maps: (ST)(u) = S(Tu)
   def *[Y](s: LinearMap[W, Y, E], t: LinearMap[V, W, E]): LinearMap[V, Y, E] = {
     new LinearMap[V, Y, E](V, s.W) {
-      override def apply(e: V): Y = s.apply(t.apply(e))
+      override def apply(e: V): Y = s(t(e))
     }
   }
 }

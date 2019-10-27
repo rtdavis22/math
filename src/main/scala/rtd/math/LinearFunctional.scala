@@ -7,21 +7,21 @@ abstract class LinearFunctional[V, E](v: VectorSpace[V, E]) extends LinearMap[V,
 class DualSpace[V, E](V: VectorSpace[V, E]) extends VectorSpace[LinearFunctional[V, E], E] {
   val field: Field[E] = V.field
 
-  override def +(lf1: LinearFunctional[V, E], lf2: LinearFunctional[V, E]): LinearFunctional[V, E] = {
+  override def +(f: LinearFunctional[V, E], g: LinearFunctional[V, E]): LinearFunctional[V, E] = {
     new LinearFunctional(V) {
-      override def apply(v: V): E = field.+(lf1.apply(v), lf2.apply(v))
+      override def apply(v: V): E = field.+(f(v), g(v))
     }
   }
 
-  override def *(e: E, lf: LinearFunctional[V, E]): LinearFunctional[V, E] = {
+  override def *(e: E, f: LinearFunctional[V, E]): LinearFunctional[V, E] = {
     new LinearFunctional(V) {
-      override def apply(v: V): E = field.*(e, lf.apply(v))
+      override def apply(v: V): E = field.*(e, f(v))
     }
   }
 
-  override def -(lf: LinearFunctional[V, E]): LinearFunctional[V, E] = {
+  override def -(f: LinearFunctional[V, E]): LinearFunctional[V, E] = {
     new LinearFunctional(V) {
-      override def apply(v: V): E = field.-(lf.apply(v))
+      override def apply(v: V): E = field.-(f(v))
     }
   }
 
@@ -40,9 +40,9 @@ class DualSpace[V, E](V: VectorSpace[V, E]) extends VectorSpace[LinearFunctional
 }
 
 class DualMap[V, W, E](t: LinearMap[V, W, E]) extends LinearMap(new DualSpace(t.W), new DualSpace(t.V)) {
-  override def apply(lf: LinearFunctional[W, E]): LinearFunctional[V, E] = {
+  override def apply(g: LinearFunctional[W, E]): LinearFunctional[V, E] = {
     new LinearFunctional[V, E](t.V) {
-      override def apply(v: V): E = lf.apply(t.apply(v))
+      override def apply(v: V): E = g(t(v))
     }
   }
 }
