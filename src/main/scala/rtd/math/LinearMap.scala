@@ -18,7 +18,7 @@ abstract class LinearMap[V, W, E](val V: VectorSpace[V, E], val W: VectorSpace[W
   }
 }
 
-// The set of linear maps from V to W forms a vector space
+// The set of linear maps from V to W forms a vector space. Also denoted L(V, W).
 class Hom[V, W, E](val V: VectorSpace[V, E], val W: VectorSpace[W, E]) extends VectorSpace[LinearMap[V, W, E], E] {
   override val field: Field[E] = V.field
 
@@ -54,11 +54,12 @@ class Hom[V, W, E](val V: VectorSpace[V, E], val W: VectorSpace[W, E]) extends V
   }
 }
 
-// The endomorphisms of a vector space V (linear maps from V to itself)
+// A linear operator is a linear map from V to itself.
+abstract class LinearOperator[V, E](V: VectorSpace[V, E]) extends LinearMap[V, V, E](V, V)
+
+// The endomorphisms of a vector space V (the set of all linear operators). Also denoted L(V).
 class End[V, E](V: VectorSpace[V, E]) extends Hom[V, V, E](V, V)
 
-abstract class EndomorphicMap[V, E](V: VectorSpace[V, E]) extends LinearMap[V, V, E](V, V)
-
-class IdentityMap[V, E](V: VectorSpace[V, E]) extends EndomorphicMap[V, E](V) {
+class IdentityMap[V, E](V: VectorSpace[V, E]) extends LinearOperator[V, E](V) {
   override def apply(v: V): V = v
 }
