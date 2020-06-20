@@ -3,11 +3,6 @@ package rtd.math
 abstract class LinearMap[V, W, E](val V: VectorSpace[V, E], val W: VectorSpace[W, E]) {
   def apply(v: V): W
 
-  // The matrix of a linear map with respect to a basis
-  def getMatrix(basis: List[V]): List[W] = {
-    basis.map(apply)
-  }
-
   def dual: DualMap[V, W, E] = new DualMap(this)
 
   // T(v + w) = T(v) + T(w)
